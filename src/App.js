@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import Modal from './components/modal';
+import Button from './components/button';
 
 function App() {
+  const [modalOpen, setModalOpen] = useState(false);
   const [trips, setTrips] = useState([]);
   const [title, setTitle] = useState("");
   const [country, setCountry] = useState("");
@@ -27,9 +30,19 @@ function App() {
     setDescription("");
   }
 
+  function openModal(){
+    console.log('open Modal');
+    setModalOpen(true);
+    return <Modal />
+  }
+  function closeModal(){
+    setModalOpen(false);
+  }
+
   return (
     <div>
       <h1>My Travel Journal</h1>
+      <Button text="Add new trip" onClick={openModal} />
       <form onSubmit={saveTrip}>
         <label>
           Title of travel
@@ -61,13 +74,7 @@ function App() {
         </label>
         <button type="submit">Save Trip</button>
       </form>
-      {/* {trips.map((trip) => {
-        return (<div key={trip.title}>
-          <h2>{trip.title}</h2>
-          <h3>{trip.country}</h3>
-          <p>{trip.description}</p>
-        </div>)
-      })} */}
+      { modalOpen ? <Modal close={closeModal}/> : null }
     </div>
     
   );
