@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import Modal from './components/modal';
-import Button from './components/button';
+import H1 from './components/elements/h1';
+import Modal from './components/elements/modal';
+import Button from './components/elements/button';
 import Store from './Store';
 import Input from './components/form/input';
 import Select from './components/form/select';
 import Textarea from './components/form/textarea';
+import SubmitButton from './components/form/submit-button';
 
 function App() {
   const [countries, setCountries] = useState([{name: "USA"}, {name: "UK"}, {name: "Sweden"}, {name: "Greece"}]);
@@ -45,7 +47,7 @@ function App() {
     setCountry("");
     setDescription("");
 
-    //  WHY DO I NEED TO DO THIS WHEN I UPDATE THE STATE?!?
+    //  WHY DO I NEED TO DO THIS On INPUT WHEN I ALREADY HAS UPDATED THE STATE?!?
     Array.from(document.querySelectorAll("input")).forEach(
       input => (input.value = "")
     );
@@ -55,6 +57,7 @@ function App() {
     console.log('open Modal');
     setModalOpen(true);
   }
+
   function closeModal(){
     setModalOpen(false);
   }
@@ -64,16 +67,14 @@ function App() {
       value={{trips, add: saveTrip }}
     >
       <div>
-        <h1>My Travel Journal</h1>
+        <H1 text="My Travel Journal" />
         <Button text="Add new trip" onClick={openModal} />
 
         <form onSubmit={saveTrip}>
-
           <Input label="Title of travel" type="text" value={title} save={saveTitle}/>
-          <Select label="Select country" value={country} onChange={saveCountry} optionsLabel="Country" options={countries} />
+          <Select label="Select country" value={country} onChange={saveCountry} options={countries} />
           <Textarea label="Description" value={description} onChange={saveDescription}/>
-
-          <button type="submit">Save Trip</button>
+          <SubmitButton text="Save Trip"/>
         </form>
         { modalOpen ? <Modal close={closeModal}/> : null }
       </div>

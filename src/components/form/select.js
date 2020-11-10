@@ -6,7 +6,7 @@ export default function Select(props){
               onChange={props.onChange}
               value={props.value}
             >
-                <option value="" disabled>{props.optionsLabel}</option>
+                <option value="" disabled></option>
                 {props.options.map(option => {
                     for (const [key, value] of Object.entries(option)) {
                         return <option key={value} value={value}>{value}</option>
