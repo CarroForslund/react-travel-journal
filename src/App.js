@@ -28,20 +28,16 @@ function App() {
     }]);
   }
 
-  function openModal(){
-    setModalOpen(true);
-  }
-
-  function closeModal(){
-    setModalOpen(false);
+  function toggleModal(){
+    setModalOpen(!modalOpen);
   }
 
   return (
     <Store.Provider value={{trips, add: saveTrip }} >
       <div>
         <H1 text="My Travel Journal" />
-        <Button text="Add new trip" onClick={openModal} />
-        { modalOpen ? <Modal close={closeModal} saveTrip={saveTrip} options={countries} /> : null }
+        <Button text="Add new trip" onClick={toggleModal} />
+        { modalOpen ? <Modal close={toggleModal} saveTrip={saveTrip} options={countries} /> : null }
       </div>
     </Store.Provider>
   );
