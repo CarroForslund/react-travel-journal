@@ -4,18 +4,12 @@ import H1 from './components/elements/h1';
 import Modal from './components/elements/modal';
 import Button from './components/elements/button';
 import Store from './Store';
-import Input from './components/form/input';
-import Select from './components/form/select';
-import Textarea from './components/form/textarea';
-import SubmitButton from './components/form/submit-button';
+
 
 function App() {
   const [countries, dispatch] = useReducer(countriesReducer, []);
   const [modalOpen, setModalOpen] = useState(false);
   const [trips, setTrips] = useState([]);
-  const [title, setTitle] = useState("");
-  const [country, setCountry] = useState("");
-  const [description, setDescription] = useState("");
 
   useEffect(() => {
     return(
@@ -25,30 +19,13 @@ function App() {
     )
   },[]);
 
-  function saveTitle(e){
-    setTitle(e.target.value);
-  }
-  function saveCountry(e){
-    setCountry(e.target.value);
-  }
-  function saveDescription(e){
-    setDescription(e.target.value);
-  }
   function saveTrip(e){
     e.preventDefault();
     setTrips([...trips, {
-      title: {title},
-      country: {country},
-      description: {description},
+      title: e.target.title,
+      country: e.target.country,
+      description: e.target.description,
     }]);
-    setTitle("");
-    setCountry("");
-    setDescription("");
-
-    //  WHY DO I NEED TO DO THIS On INPUT WHEN I ALREADY HAS UPDATED THE STATE?!?
-    Array.from(document.querySelectorAll("input")).forEach(
-      input => (input.value = "")
-    );
   }
 
   function openModal(){
@@ -60,20 +37,11 @@ function App() {
   }
 
   return (
-    <Store.Provider
-      value={{trips, add: saveTrip }}
-    >
+    <Store.Provider value={{trips, add: saveTrip }} >
       <div>
         <H1 text="My Travel Journal" />
         <Button text="Add new trip" onClick={openModal} />
-
-        <form onSubmit={saveTrip}>
-          <Input label="Title of travel" type="text" value={title} save={saveTitle}/>
-          <Select label="Select country" value={country} options={countries} />
-          <Textarea label="Description" value={description} onChange={saveDescription}/>
-          <SubmitButton text="Save Trip"/>
-        </form>
-        { modalOpen ? <Modal close={closeModal}/> : null }
+        { modalOpen ? <Modal close={closeModal} saveTrip={saveTrip} options={countries} /> : null }
       </div>
     </Store.Provider>
   );
