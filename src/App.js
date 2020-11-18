@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useReducer, useState, useEffect } from 'react';
+import countriesReducer from './components/reducers/countriesReducer';
 import H1 from './components/elements/h1';
 import Modal from './components/elements/modal';
 import Button from './components/elements/button';
@@ -9,7 +10,7 @@ import Textarea from './components/form/textarea';
 import SubmitButton from './components/form/submit-button';
 
 function App() {
-  const [countries, setCountries] = useState([{name: "USA"}, {name: "UK"}, {name: "Sweden"}, {name: "Greece"}]);
+  const [countries, dispatch] = useReducer(countriesReducer, []);
   const [modalOpen, setModalOpen] = useState(false);
   const [trips, setTrips] = useState([]);
   const [title, setTitle] = useState("");
@@ -17,15 +18,12 @@ function App() {
   const [description, setDescription] = useState("");
 
   useEffect(() => {
-    console.log('hello useEffect');
-    getCountries();
-  },[]);
-
-  function getCountries(){
-    fetch('https://restcountries.eu/rest/v2/all')
+    return(
+      fetch('https://restcountries.eu/rest/v2/all')
       .then(response => response.json())
-      .then(response => { setCountries(response) });
-  }
+      .then(response => { dispatch({type: 'storeCountries', countries: response}) })
+    )
+  },[]);
 
   function saveTitle(e){
     setTitle(e.target.value);
@@ -54,7 +52,6 @@ function App() {
   }
 
   function openModal(){
-    console.log('open Modal');
     setModalOpen(true);
   }
 
@@ -72,7 +69,7 @@ function App() {
 
         <form onSubmit={saveTrip}>
           <Input label="Title of travel" type="text" value={title} save={saveTitle}/>
-          <Select label="Select country" value={country} onChange={saveCountry} options={countries} />
+          <Select label="Select country" value={country} options={countries} />
           <Textarea label="Description" value={description} onChange={saveDescription}/>
           <SubmitButton text="Save Trip"/>
         </form>
