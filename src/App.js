@@ -5,7 +5,7 @@ import Modal from './components/elements/modal';
 import Button from './components/elements/button';
 import Store from './Store';
 
-
+//Test
 function App() {
   const [countries, dispatch] = useReducer(countriesReducer, []);
   const [modalOpen, setModalOpen] = useState(false);
