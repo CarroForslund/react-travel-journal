@@ -4,12 +4,20 @@ import H1 from './components/elements/h1';
 import Modal from './components/elements/modal';
 import Button from './components/elements/button';
 import Store from './Store';
+import Input from './components/form/input';
+import Select from './components/form/select';
+import Textarea from './components/form/textarea';
+import SubmitButton from './components/form/submit-button';
 
 
 function App() {
   const [countries, dispatch] = useReducer(countriesReducer, []);
-  const [modalOpen, setModalOpen] = useState(false);
   const [trips, setTrips] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const [name, setName] = useState("");
+  const [country, setCountry] = useState("");
+  const [description, setDescription] = useState("");
 
   useEffect(() => {
     return(
@@ -21,11 +29,31 @@ function App() {
 
   function saveTrip(e){
     e.preventDefault();
+
     setTrips([...trips, {
-      title: e.target.title,
-      country: e.target.country,
-      description: e.target.description,
+      name: {name},
+      country: {country},
+      description: {description},
     }]);
+
+    setName("");
+    setCountry("");
+    setDescription("");
+
+    //  WHY DO I NEED TO DO THIS WHEN I UPDATE THE STATE?!?
+    Array.from(document.querySelectorAll("input")).forEach(
+      input => (input.value = "")
+    );
+  }
+
+  function saveName(e){
+    setName(e.target.value);
+  }
+  function saveCountry(e){
+    setCountry(e.target.value);
+  }
+  function saveDescription(e){
+    setDescription(e.target.value);
   }
 
   function toggleModal(){
@@ -37,7 +65,15 @@ function App() {
       <div>
         <H1 text="My Travel Journal" />
         <Button text="Add new trip" onClick={toggleModal} />
-        { modalOpen ? <Modal close={toggleModal} saveTrip={saveTrip} options={countries} /> : null }
+        { modalOpen && 
+        <Modal close={toggleModal} saveTrip={saveTrip} options={countries} >
+            <form onSubmit={saveTrip}>
+                <Input label="Name trip" type="text" value={name} save={saveName} />
+                <Select label="Select country" value={country} save={saveCountry} options={countries} />
+                <Textarea label="Description" value={description} save={saveDescription}/>
+                <SubmitButton text="Save Trip"/>
+            </form>
+        </Modal>}
       </div>
     </Store.Provider>
   );
