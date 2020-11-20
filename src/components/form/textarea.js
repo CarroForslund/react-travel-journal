@@ -4,7 +4,7 @@ export default function Textarea(props){
             {props.label}
             <textarea
                 value={props.value}
-                onChange={props.onChange}
+                onChange={props.save}
             />
         </label>     
     );
