@@ -12,7 +12,7 @@ import { useStore } from './StoreContext';
 function App() {
   const [countries, dispatch] = useReducer(countriesReducer, []);
   // const [trips, dispatchTrips] = useReducer(tripsReducer, []);
-  const [trips, dispatchTrips] = useStore();
+  const {trips, dispatchTrips} = useStore();
   const [modalOpen, setModalOpen] = useState(false);
   const [name, setName] = useState("");
   const [country, setCountry] = useState("");
@@ -20,11 +20,9 @@ function App() {
 
 
   useEffect(() => {
-    return(
-      fetch('https://restcountries.eu/rest/v2/all')
-      .then(response => response.json())
-      .then(response => { dispatch({type: 'storeCountries', countries: response}) })
-    )
+    fetch('https://restcountries.eu/rest/v2/all')
+    .then(response => response.json())
+    .then(response => { dispatch({type: 'storeCountries', countries: response}) })
   },[]);
 
   function saveName(e){
