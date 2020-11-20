@@ -6,6 +6,7 @@ export default function Input(props){
                 type={props.type}
                 value={props.title}
                 onChange={props.save}
+                required
             />
         </label>
     );

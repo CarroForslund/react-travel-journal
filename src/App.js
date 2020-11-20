@@ -1,20 +1,23 @@
 import React, { useReducer, useState, useEffect } from 'react';
 import countriesReducer from './components/reducers/countriesReducer';
+import tripsReducer from './components/reducers/tripsReducer';
 import H1 from './components/elements/h1';
 import Modal from './components/elements/modal';
 import {StyledButton} from './components/elements/button';
 import Input from './components/form/input';
 import Select from './components/form/select';
 import Textarea from './components/form/textarea';
+// import { useStore } from './StoreContext';
 
 function App() {
   const [countries, dispatch] = useReducer(countriesReducer, []);
+  const [trips, dispatchTrips] = useReducer(tripsReducer, []);
+  // const [trips, setTrips] = useStore();
   const [modalOpen, setModalOpen] = useState(false);
-  const [trips, setTrips] = useState([]);
-
   const [name, setName] = useState("");
   const [country, setCountry] = useState("");
   const [description, setDescription] = useState("");
+
 
   useEffect(() => {
     return(
@@ -36,12 +39,15 @@ function App() {
 
   function saveTrip(e){
     e.preventDefault();
-    console.log(e.target);
-    setTrips([...trips, {
-      name: name,
-      country: country,
-      description: description,
-    }]);
+    dispatchTrips({
+      type: "add",
+      trip: {
+        name: name,
+        country: country,
+        description: description,
+      },
+      trips
+    });
     setName("");
     setCountry("");
     setDescription("");
