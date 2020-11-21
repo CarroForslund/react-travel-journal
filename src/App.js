@@ -1,23 +1,21 @@
-import React, { useReducer, useState, useEffect } from 'react';
+import React, { useReducer, useState, useEffect, useCallback } from 'react';
 import countriesReducer from './components/reducers/countriesReducer';
-// import tripsReducer from './components/reducers/tripsReducer';
 import H1 from './components/elements/h1';
-import Modal from './components/elements/modal';
-import {StyledButton} from './components/elements/button';
+import ModalWrapper from './components/elements/modal-wrapper';
+import { StyledButton } from './components/elements/button';
 import Input from './components/form/input';
 import Select from './components/form/select';
 import Textarea from './components/form/textarea';
 import { useStore } from './StoreContext';
+import DisplayTrips from './components/DisplayTrips';
 
 function App() {
   const [countries, dispatch] = useReducer(countriesReducer, []);
-  // const [trips, dispatchTrips] = useReducer(tripsReducer, []);
   const {trips, dispatchTrips} = useStore();
   const [modalOpen, setModalOpen] = useState(false);
   const [name, setName] = useState("");
   const [country, setCountry] = useState("");
   const [description, setDescription] = useState("");
-
 
   useEffect(() => {
     fetch('https://restcountries.eu/rest/v2/all')
@@ -25,18 +23,20 @@ function App() {
     .then(response => { dispatch({type: 'storeCountries', countries: response}) })
   },[]);
 
-  function saveName(e){
+  const saveName = useCallback((e)=>{
     setName(e.target.value);
-  }
-  function saveCountry(e){
+  }, []);
+  const saveCountry = useCallback((e)=>{
     setCountry(e.target.value);
-  }
-  function saveDescription(e){
+  }, []);
+  const saveDescription = useCallback((e) =>{
     setDescription(e.target.value);
-  }
+  }, []);
 
   function saveTrip(e){
+
     e.preventDefault();
+
     dispatchTrips({
       type: "add",
       trip: {
@@ -46,14 +46,16 @@ function App() {
       },
       trips
     });
+
     setName("");
     setCountry("");
     setDescription("");
 
-    //  WHY DO I NEED TO DO THIS WHEN I UPDATE THE STATE?!?
     Array.from(document.querySelectorAll("input")).forEach(
       input => (input.value = "")
     );
+
+    toggleModal();
   }
 
   function toggleModal(){
@@ -64,8 +66,9 @@ function App() {
       <>
         <H1 text="My Travel Journal" />
         <StyledButton onClick={toggleModal}>Add new trip</StyledButton>
+        { trips.length > 0 && <DisplayTrips />}
         { modalOpen &&
-          <Modal>
+          <ModalWrapper>
             <form onSubmit={saveTrip}>
                 <Input label="Name trip" type="text" value={name} save={saveName}/>
                 <Select label="Select country" value={country} options={countries} save={saveCountry} />
@@ -73,7 +76,7 @@ function App() {
                 <StyledButton type="submit">Add trip</StyledButton>
                 <StyledButton onClick={toggleModal}>Cancel</StyledButton>
             </form>
-          </Modal> }
+          </ModalWrapper> }
       </>
   );
 }
