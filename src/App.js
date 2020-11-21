@@ -1,4 +1,4 @@
-import React, { useReducer, useState, useEffect, useCallback } from 'react';
+import React, { useReducer, useState, useEffect, useCallback, useMemo } from 'react';
 import countriesReducer from './components/reducers/countriesReducer';
 import H1 from './components/elements/h1';
 import ModalWrapper from './components/elements/modal-wrapper';
@@ -16,6 +16,7 @@ function App() {
   const [name, setName] = useState("");
   const [country, setCountry] = useState("");
   const [description, setDescription] = useState("");
+  const tripAmount = useMemo(()=>{return trips.length}, [trips]);
 
   useEffect(() => {
     fetch('https://restcountries.eu/rest/v2/all')
@@ -65,6 +66,7 @@ function App() {
   return (
       <>
         <H1 text="My Travel Journal" />
+        <p>Number of trips: {tripAmount}</p>
         <StyledButton onClick={toggleModal}>Add new trip</StyledButton>
         { trips.length > 0 && <DisplayTrips />}
         { modalOpen &&
