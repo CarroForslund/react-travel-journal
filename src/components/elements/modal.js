@@ -1,26 +1,30 @@
-import { createPortal } from 'react-dom';
-import Button from './button';
-import Input from './../form/input';
-import Select from './../form/select';
-import Textarea from './../form/textarea';
-import SubmitButton from './../form/submit-button';
+import styled from 'styled-components';
 
+export const StyledModal = styled.div`
+    /* 320px — 480px: Mobile devices.*/
+    width: 90%;
+    margin: 5% auto;
+    background-color: white;
+    padding: 2rem;
 
-const modalRoot = document.getElementById('modal-root');
+    /* 481px — 768px: iPads, Tablets. */
+    @media (min-width: 481px) {
+        width: 70%;
+    }
 
-export default function Modal(props){
-    return createPortal(
-        // element to render:
-        <div>
-             <form onSubmit={props.saveTrip}>
-                <Input label="Name trip" type="text" name="name" />
-                <Select label="Select country" name="country" options={props.options} />
-                <Textarea label="Description" name="description"/>
-                <SubmitButton text="Save Trip"/>
-            </form>
-            <Button text="Close" onClick={props.close} />
-        </div>,
-        // mount this portal to:
-        modalRoot,
-    );
-}
+    /* 769px — 1024px: Small screens, laptops. */
+    @media (min-width: 769px) {
+        width: 60%;
+    }
+
+    /* 1025px — 1200px: Desktops, large screens. */
+    @media (min-width: 1025px) {
+        width: 50%;
+    }
+
+    /* 1201px and more — Extra large screens, TV. */
+    @media (min-width: 1201px) {
+        width: 30%;
+    }
+
+`;
